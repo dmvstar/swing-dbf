@@ -1,0 +1,6 @@
+#!/bin/sh
+
+[ -d $1 ] && {
+  tar cjvf $1.tar.bz2 $1
+}
+

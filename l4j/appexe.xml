@@ -1,0 +1,37 @@
+<launch4jConfig>
+  <headerType>0</headerType>
+  <jar>../dist/desktopDBF_full.jar</jar>
+  <outfile>../desktopDBF.exe</outfile>
+  <errTitle></errTitle>
+  <jarArgs></jarArgs>
+  <chdir></chdir>
+  <customProcName>false</customProcName>
+  <stayAlive>false</stayAlive>
+  <icon>xfmail.ico</icon>
+  <jre>
+    <path></path>
+    <minVersion>1.4.2</minVersion>
+    <maxVersion></maxVersion>
+    <initialHeapSize>0</initialHeapSize>
+    <maxHeapSize>0</maxHeapSize>
+    <args></args>
+  </jre>
+  <splash>
+    <file>splash2.bmp</file>
+    <waitForWindow>true</waitForWindow>
+    <timeout>90</timeout>
+    <timeoutErr>true</timeoutErr>
+  </splash>
+  <versionInfo>
+    <fileVersion>0.0.1.21</fileVersion>
+    <txtFileVersion>0.0.1.21</txtFileVersion>
+    <fileDescription>DBF Application</fileDescription>
+    <copyright>UniCorn LTD</copyright>
+    <productVersion>0.0.1.21</productVersion>
+    <txtProductVersion>0.0.1.21</txtProductVersion>
+    <productName>DBF Application</productName>
+    <companyName>UniCorn LTD</companyName>
+    <internalName>DBF</internalName>
+    <originalFilename>desktopDBF.exe</originalFilename>
+  </versionInfo>
+</launch4jConfig>
