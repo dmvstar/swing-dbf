@@ -41,6 +41,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.FileHandler;
 import java.util.logging.SimpleFormatter;
@@ -80,19 +82,20 @@ import ua.nio.cs.ext.KOI8_U;
 public class DesktopDBFView extends FrameView {
 // Possible Look & Feels
 
-    private static final String mac =
-            "com.sun.java.swing.plaf.mac.MacLookAndFeel";
-    private static final String metal =
-            "javax.swing.plaf.metal.MetalLookAndFeel";
-    private static final String motif =
-            "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
-    private static final String windows =
-            "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
-    private static final String plastic =
-            "com.jgoodies.looks.plastic.PlasticXPLookAndFeel";
-    private static final String jtatoo =
-            "com.jtattoo.plaf.smart.SmartLookAndFeel";
+    private static final String mac
+            = "com.sun.java.swing.plaf.mac.MacLookAndFeel";
+    private static final String metal
+            = "javax.swing.plaf.metal.MetalLookAndFeel";
+    private static final String motif
+            = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
+    private static final String windows
+            = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
+    private static final String plastic
+            = "com.jgoodies.looks.plastic.PlasticXPLookAndFeel";
+    private static final String jtatoo
+            = "com.jtattoo.plaf.smart.SmartLookAndFeel";
     private String currentLookAndFeel = metal;
+
     DesktopDBFApp mainApplication;
     private String fileName;
     private String configFilePath = System.getProperty("user.home") + "/.DesktopDBF/config.xml";
@@ -106,14 +109,14 @@ public class DesktopDBFView extends FrameView {
     private SimpleFormatter formatterTxt;
     private Logger globalLogger;
 
-
-
     public DesktopDBFView(DesktopDBFApp app) {
         super(app);
 
         this.mainApplication = app;
 
         prepareLogger();
+
+        globalLogger.info(Locale.getDefault().toString());
 
         File fileConfig = new File(configFilePath);
         if (fileConfig.exists()) {
@@ -123,6 +126,8 @@ public class DesktopDBFView extends FrameView {
                 fis = new FileInputStream(fileConfig);
                 propConf.loadFromXML(fis);
                 currentLookAndFeel = propConf.getProperty("lookAndFeel", currentLookAndFeel);
+                localeName = propConf.getProperty("locale", localeName);
+                updateLocale();
                 updateLookAndFeel();
                 if (fis != null) {
                     fis.close();
@@ -150,12 +155,11 @@ public class DesktopDBFView extends FrameView {
                     case DataLoader.FYLE_TYPE_DBF: {
                         miServiceStruct.setEnabled(true);
 
-
                     }
                     break;
                     case DataLoader.FYLE_TYPE_XLS: {
                         miServiceStruct.setEnabled(false);
-                        
+
                     }
                     break;
                 }
@@ -165,7 +169,6 @@ public class DesktopDBFView extends FrameView {
         });
 
         //tpView.setOpaque(true);
-
         globalResourceMap = Application.getInstance(DesktopDBFApp.class).getContext().getResourceMap(DesktopDBFView.class);
         this.getFrame().setIconImage(globalResourceMap.getImageIcon("DesktopDBFView.MainFrame.icon").getImage());
 
@@ -177,7 +180,6 @@ public class DesktopDBFView extends FrameView {
                 open().run();
             }
         }
-
 
         fileName = null;
 
@@ -311,6 +313,7 @@ public class DesktopDBFView extends FrameView {
      * Sets the current L&F on each demo module
      */
     private void updateLookAndFeel() {
+
         try {
             Properties propConf = new Properties();
 
@@ -396,7 +399,7 @@ public class DesktopDBFView extends FrameView {
     private void prepareLogger() {
         globalLogger = Logger.getLogger(DesktopDBFView.class.getName());
         try {
-            fileTxt = new FileHandler(configFileDir+"main.log", true);
+            fileTxt = new FileHandler(configFileDir + "main.log", true);
             formatterTxt = new SimpleFormatter();
             fileTxt.setFormatter(formatterTxt);
             globalLogger.addHandler(fileTxt);
@@ -407,6 +410,53 @@ public class DesktopDBFView extends FrameView {
         } catch (SecurityException ex) {
             Logger.getLogger(DesktopDBFView.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private void saveLocale(String locale) {
+        localeName = locale;
+        try {
+            Properties propConf = new Properties();
+
+            File fileConfig = new File(configFilePath);
+            File configDir = new File(configFileDir);
+            if (!configDir.exists()) {
+                configDir.mkdirs();
+                FileOutputStream fos = new FileOutputStream(fileConfig);
+                propConf.setProperty("locale", localeName);
+                propConf.storeToXML(fos, null);
+                fos.close();
+            } else {
+            }
+
+            if (fileConfig.exists()) {
+                FileInputStream fis = new FileInputStream(fileConfig);
+                propConf.loadFromXML(fis);
+                propConf.setProperty("locale", localeName);
+                FileOutputStream fos = new FileOutputStream(fileConfig);
+                propConf.storeToXML(fos, null);
+                fis.close();
+                fos.close();
+            }
+        } catch (Exception ex) {
+            System.out.println("Failed loading Locale: " + currentLookAndFeel);
+            System.out.println(ex);
+        }
+        updateLocale();
+    }
+
+    private void updateLocale() {
+        globalLogger.info(Locale.getDefault().toString());
+        if(localeName.indexOf('_')>0){
+            String l= localeName.substring(0,localeName.indexOf('_'));
+            String c= localeName.substring(localeName.indexOf('_')+1);
+            Locale.setDefault(new Locale(l,c));
+        } else{            
+            Locale.setDefault(new Locale(localeName));
+        }
+        /**
+         * @todo may be current file
+         */
+        globalLogger.info(Locale.getDefault().toString());
     }
 
     class ChangeLookAndFeelAction extends AbstractAction {
@@ -428,13 +478,12 @@ public class DesktopDBFView extends FrameView {
 
     /**
      * A utility function that layers on top of the LookAndFeel's
-     * isSupportedLookAndFeel() method. Returns true if the LookAndFeel
-     * is supported. Returns false if the LookAndFeel is not supported
-     * and/or if there is any kind of error checking if the LookAndFeel
-     * is supported.
+     * isSupportedLookAndFeel() method. Returns true if the LookAndFeel is
+     * supported. Returns false if the LookAndFeel is not supported and/or if
+     * there is any kind of error checking if the LookAndFeel is supported.
      *
-     * The L&F menu will use this method to detemine whether the various
-     * L&F options should be active or inactive.
+     * The L&F menu will use this method to detemine whether the various L&F
+     * options should be active or inactive.
      *
      */
     protected boolean isAvailableLookAndFeel(String laf) {
@@ -495,7 +544,6 @@ public class DesktopDBFView extends FrameView {
         getPopupDBFPanel().add(menuPopViewCharset);
         getPopupDBFPanel().add(menuPopEncoCharset);
 
-
         item = new JMenuItem(resourceMap.getString("Application.menuService.Locale.uk.text"));
         item.setIcon(new javax.swing.ImageIcon(getClass().getResource("/net/sf/dvstar/swirl/desktopdbf/resources/img/flags/uk_UA.png")));
         item.addActionListener(new LocaleMenuListener("uk_UA"));
@@ -509,8 +557,6 @@ public class DesktopDBFView extends FrameView {
         item.addActionListener(new LocaleMenuListener("en_US"));
         menuLocale.add(item);
 
-
-
         item = new JMenuItem();
         menuIcon = globalResourceMap.getImageIcon("DesktopDBFView.PopupXLSPanel.export.icon");
 
@@ -518,7 +564,6 @@ public class DesktopDBFView extends FrameView {
         item.setText(resourceMap.getString("Application.menuService.Export.text"));
         item.addActionListener(new PopupXLSActionListener(PopupXLSActionListener.POPUP_XLS_EXPORT));
         getPopupXLSPanel().add(item);
-
 
         mi = createLafMenuItem(lafMenu, "Java", "LafMenu.java_mnemonic",
                 "LafMenu.java_accessible_description", metal);
@@ -540,13 +585,12 @@ public class DesktopDBFView extends FrameView {
         mi = createLafMenuItem(lafMenu, "Plastic", "LafMenu.java_mnemonic", "Plastic", plastic);
         mi = createLafMenuItem(lafMenu, "JTatoo", "LafMenu.java_mnemonic", "JTatoo", jtatoo);
 
-
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -871,7 +915,6 @@ public class DesktopDBFView extends FrameView {
             String lastDir = ".";
 
 //System.out.println( String.format("Open file doInBackground :[%s]", fileName)  );
-
             if (fileName == null) {
 
                 try {
@@ -897,9 +940,8 @@ public class DesktopDBFView extends FrameView {
                     jfileChooser.setCurrentDirectory(new File(lastDir));
 
                     //Property prop = mainApplication.getContext().getSessionStorage().getProperty( JFileChooser.class );
-                    
-                    PropertySupport prop = (PropertySupport) mainApplication.getContext().getSessionStorage().getProperty( JFileChooser.class );
-                    
+                    PropertySupport prop = (PropertySupport) mainApplication.getContext().getSessionStorage().getProperty(JFileChooser.class);
+
                     //prop = new Property();
                     jfileChooser.setFileFilter(filter);
                     int showResult = jfileChooser.showOpenDialog(tpView);
@@ -915,7 +957,6 @@ public class DesktopDBFView extends FrameView {
                         fileName = jfileChooser.getSelectedFile().getName();
 
 //!!!!!!!!!!!                        mainApplication.getContext().getSessionStorage().putProperty(JFileChooser.class, prop);
-                        
                         propConf.setProperty("lastDir", jfileChooser.getCurrentDirectory().getPath());
 
                         File configDir = new File(configFileDir);
@@ -926,7 +967,6 @@ public class DesktopDBFView extends FrameView {
                         FileOutputStream fos = new FileOutputStream(System.getProperty("user.home") + "/.desktopDBF/config.xml");
                         propConf.storeToXML(fos, null);
                         fos.close();
-
 
                         if (DBFFileFilter.getExtension(fileToOpen).equals(DBFFileFilter.EXT_DBF)) {
                             dbfLoader = new DBFPanelLoader(DesktopDBFView.this, fileToOpen);
@@ -1000,7 +1040,6 @@ public class DesktopDBFView extends FrameView {
                 btOpen.setEnabled(true);
             }
 
-
             return dbfLoader;  // return your result
         }
 
@@ -1036,11 +1075,9 @@ public class DesktopDBFView extends FrameView {
 
                     if (dialog.getResult().openExportFile) {
 
-
                         fileName = xlsLoaderA.getOutputFileName();
 
                         //open().run();
-
                         File exportedFile = new File(fileName);
                         dbfLoader = new DBFPanelLoader(DesktopDBFView.this, exportedFile);
 
@@ -1094,7 +1131,6 @@ public class DesktopDBFView extends FrameView {
 
 //long tms = System.currentTimeMillis();
 //long tme = tms;
-
         JFrame mainFrame = DesktopDBFApp.getApplication().getMainFrame();
 //tme = System.currentTimeMillis();       
 //System.out.println("[DesktopDBFView] DesktopDBFApp.getApplication().getMainFrame() = "+(tme-tms)+"ms");
@@ -1156,6 +1192,9 @@ public class DesktopDBFView extends FrameView {
     private String charsetName = "CP1125";
     private String fileTypeDesc = "";
 
+    /**
+     * Change locale
+     */
     class LocaleMenuListener implements ActionListener {
 
         String locale;
@@ -1167,6 +1206,7 @@ public class DesktopDBFView extends FrameView {
         @Override
         public void actionPerformed(ActionEvent e) {
             localeName = locale;
+            saveLocale(localeName);
             int sel = tpView.getSelectedIndex();
             if (sel >= 0) {
                 DataLoader dataLoader = loadedFileMap.get(sel);
@@ -1177,6 +1217,9 @@ public class DesktopDBFView extends FrameView {
         }
     }
 
+    /**
+     * Change charset
+     */
     class CharsetViewMenuListener implements ActionListener {
 
         String charset;
@@ -1291,7 +1334,8 @@ public class DesktopDBFView extends FrameView {
                 showXLSExport();
             }
             break;
-            default: break;
+            default:
+                break;
         }
 
     }

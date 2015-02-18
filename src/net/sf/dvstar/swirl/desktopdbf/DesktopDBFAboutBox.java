@@ -72,10 +72,11 @@ public class DesktopDBFAboutBox extends javax.swing.JDialog {
         setIconImage(null);
         setModal(true);
         setName("aboutBox"); // NOI18N
+        setPreferredSize(null);
         setResizable(false);
 
         jPanel1.setName("jPanel1"); // NOI18N
-        jPanel1.setPreferredSize(new java.awt.Dimension(300, 49));
+        jPanel1.setPreferredSize(null);
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(net.sf.dvstar.swirl.desktopdbf.DesktopDBFApp.class).getContext().getActionMap(DesktopDBFAboutBox.class, this);
         closeButton.setAction(actionMap.get("closeAboutBox")); // NOI18N
@@ -95,7 +96,7 @@ public class DesktopDBFAboutBox extends javax.swing.JDialog {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(453, Short.MAX_VALUE)
+                .addContainerGap(555, Short.MAX_VALUE)
                 .add(closeButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 120, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -110,7 +111,7 @@ public class DesktopDBFAboutBox extends javax.swing.JDialog {
         getContentPane().add(jPanel1, java.awt.BorderLayout.SOUTH);
 
         jPanel2.setName("jPanel2"); // NOI18N
-        jPanel2.setPreferredSize(new java.awt.Dimension(300, 200));
+        jPanel2.setPreferredSize(null);
 
         imageLabel.setIcon(resourceMap.getIcon("imageLabel.icon")); // NOI18N
         imageLabel.setName("imageLabel"); // NOI18N
@@ -160,14 +161,16 @@ public class DesktopDBFAboutBox extends javax.swing.JDialog {
                             .add(vendorLabel))
                         .add(34, 34, 34)
                         .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(appPlatform, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
-                            .add(vendorNameLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
-                            .add(appHomepageNameLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)))
+                            .add(appPlatform, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
+                            .add(appHomepageNameLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .add(jPanel2Layout.createSequentialGroup()
+                                .add(vendorNameLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 180, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .add(0, 0, Short.MAX_VALUE))))
                     .add(jPanel2Layout.createSequentialGroup()
                         .add(versionLabel)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(appVersionLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -198,7 +201,7 @@ public class DesktopDBFAboutBox extends javax.swing.JDialog {
 
         jPanel3.setBackground(resourceMap.getColor("jPanel3.background")); // NOI18N
         jPanel3.setName("jPanel3"); // NOI18N
-        jPanel3.setPreferredSize(new java.awt.Dimension(512, 72));
+        jPanel3.setPreferredSize(null);
 
         appDescLabel.setBackground(resourceMap.getColor("appDescLabel.background")); // NOI18N
         appDescLabel.setFont(resourceMap.getFont("appDescLabel.font")); // NOI18N
@@ -215,7 +218,7 @@ public class DesktopDBFAboutBox extends javax.swing.JDialog {
             jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .add(appDescLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 561, Short.MAX_VALUE)
+                .add(appDescLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
